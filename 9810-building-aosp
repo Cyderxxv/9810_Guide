@@ -1,0 +1,84 @@
+## Welcome to 9810 AOSP Building guide!
+## All of below lines are my experience while building AOSP for 9810 devices. If I wrong something below, please send me a message for me to fix.
+
+1. Requirements
+To build AOSP on 9810 devices, you must prepare:
++ A Linux environment (Ubuntu 18.04 upper is recommended!).
++ A 6-cores CPU and 16GB RAM or higher.
++ A good network! (Because you will need to sync 100GB+ of sources)
++ 300GB or upper storage.
++ Basic knowledge about git.
++ Command Line: via CodeAcademy.
+*Notes: /// is a command line in linux.
+
+2.Steps
++ Setting up building environment:
+  - First, you will need the building environment before building. Luckily, we have Akhilnarang's scripts, which is more easier for us to setting up.
+  - We need to clone his scripts on Github by doing this:
+  /// git clone https://github.com/akhilnarang/scripts
+  
+  - This should copy all the scripts into /home/username/scripts
+  
+  - Then we need to navigate into that folder by doing this:
+  /// cd scripts/setup
+  
+  - Then we need to lists out the directory:
+  /// ls
+  
+  - Find the file that corresponds to our Linux build. Since we are using Ubuntu it will be android_build_env.sh. For other Distros refer to the readme that has also been cloned.
+  -Run the scripts: 
+  /// . android_build_env.sh
+  
++ After all of the scripts are synced, we will need to setup Github by doing this:
+  /// git config --global user.name "your name"
+  /// git config --global user.email "youremail@example"
+  
++ Syncing the sources
+  - This is one of the worse step, you have to wait for a long time, depends on your network xD
+  - Check the ROM you want to build, then we will make a directory for the sources (at here, I'll take LineageOS for an example, you can change the name of the directory as you like):
+  /// mkdir "ROMNAME" (example: mkdir lineage)
+  - Then we will navigate that directory:
+  /// cd "ROMNAME" (example: cd lineage)
+  - You will have to check the command line to sync all the sources by looking on their Github. Usually, The repository initiation command can be found on the GitHub page under “manifest” then scroll down to repo initialisation and copy command.
+  - It should look like this: 
+  /// repo init -u git://github.com/LineageOS/android.git -b lineage-18.1
+  - Then download all the sources:
+  /// repo sync  -f --force-sync --no-clone-bundle --no-tags -j$(nproc --all)
+  - Let everything download!
+
++ Getting devices trees:
+  - Tips: For our 9810 devices (Excludes N10 Lite), we may use the LineageOS devices trees, which is more compatible with more roms!
+  - At this point, you will have to modify trees to compatible with the ROMs. But in some case, you will not need to change that (For example, crdroid and Project Sakura using the same devices configs as LineageOS)
+  - Forking the following repos (It may different for another devices, but at this case, we are building for 9810):
+    + android_device_samsung_crownlte(also for starlte and star2lte)
+    + android_device_samsung_universal9810-common
+    + android_kernel_samsung_universal9810-common
+  - In here the three files that need modification are
+		1) Android Products.mk
+		2) lineage.dependencies
+		3) lineage_"device codename".mk (example:lineage_crownlte.mk)
+    + First open AndriodProducts.mk Here replace wherever you see lineage with name of ROM in lowercase only.
+    + Second, open lineage dependencies.mk and rename file to "romname".dependencies (ecample: aim.dependencies)
+    + Third, open lineage_"codename".mk and rename to "romname"_"codename".mk and replace lineage with "romname in the code. (Remember,use lowercase)
+    +++ NOTES: Make sure you are using the correct version of the trees!
+    
+    • Making the roomservice.xml is as easy as copy paste.
+		Visit 
+			https://github.com/vrnsoma/local_manifests/blob/lineage-17.1/roomservice.xml
+		and copy and paste it into a text editor and edit it then paste it into the terminal window (step 3 in above point)
+
+		Hint for Device Tree
+			Example: link= userabc/repositories/device_samsung/crownlte (location on github)
+			 	 path= device/samsung/crownlte (Where it should download to)
+			 	 remote= github (where files are stored)
+			 	 revision= branchname (which version you want)
+    Then repo sync again:
+      /// repo sync  -f --force-sync --no-clone-bundle --no-tags -j$(nproc --all)
+      
+  3. Build
+    - Run
+      /// . build/envsetup.sh
+    - Then
+      /// brunch codename
+      
+      
