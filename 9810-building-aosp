@@ -76,9 +76,7 @@ To build AOSP on 9810 devices, you must prepare:
       /// repo sync  -f --force-sync --no-clone-bundle --no-tags -j$(nproc --all)
       
   3. Build
-    - Run
-      /// . build/envsetup.sh
-    - Then
-      /// brunch codename
+    - Follow your ROM's manifest to take their building commands, and build!
+Have FUN!
       
       
