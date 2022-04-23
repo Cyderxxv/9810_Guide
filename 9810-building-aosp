@@ -41,42 +41,26 @@ To build AOSP on 9810 devices, you must prepare:
   /// cd "ROMNAME" (example: cd lineage)
   - You will have to check the command line to sync all the sources by looking on their Github. Usually, The repository initiation command can be found on the GitHub page under “manifest” then scroll down to repo initialisation and copy command.
   - It should look like this: 
-  /// repo init -u git://github.com/LineageOS/android.git -b lineage-18.1
+  /// repo init -u git://github.com/LineageOS/android.git -b lineage-19.1
   - Then download all the sources:
   /// repo sync  -f --force-sync --no-clone-bundle --no-tags -j$(nproc --all)
   - Let everything download!
 
 + Getting devices trees:
-  - Tips: For our 9810 devices (Excludes N10 Lite), we may use the LineageOS devices trees, which is more compatible with more roms!
-  - At this point, you will have to modify trees to compatible with the ROMs. But in some case, you will not need to change that (For example, crdroid and Project Sakura using the same devices configs as LineageOS)
-  - Forking the following repos (It may different for another devices, but at this case, we are building for 9810):
-    + android_device_samsung_crownlte(also for starlte and star2lte)
-    + android_device_samsung_universal9810-common
-    + android_kernel_samsung_universal9810-common
-  - In here the three files that need modification are
-		1) Android Products.mk
-		2) lineage.dependencies
-		3) lineage_"device codename".mk (example:lineage_crownlte.mk)
-    + First open AndriodProducts.mk Here replace wherever you see lineage with name of ROM in lowercase only.
-    + Second, open lineage dependencies.mk and rename file to "romname".dependencies (ecample: aim.dependencies)
-    + Third, open lineage_"codename".mk and rename to "romname"_"codename".mk and replace lineage with "romname in the code. (Remember,use lowercase)
-    +++ NOTES: Make sure you are using the correct version of the trees!
-    
-    • Making the roomservice.xml is as easy as copy paste.
-		Visit 
-			https://github.com/vrnsoma/local_manifests/blob/lineage-17.1/roomservice.xml
-		and copy and paste it into a text editor and edit it then paste it into the terminal window (step 3 in above point)
+ - For 9810: you may have a look into our organization for all trees at here: https://github.com/universal9810
+ - Tip: https://github.com/universal9810/local_manifests (All trees that we used to build is at here)
+ 
++ Modifying the trees for ROMs:
+ - There are 3 things that you need to notice at here: romname_device.mk, romname.dependencies, AndroidProducts.mk.
+ - So how to modify it to build the ROM you want?
+ - Easy, let's take Lineage 19.1 as an Example:
+	+ Now you can look into any official Lineage(or the ROM you want to build) device: at here we use beyond1lte as an example. (https://github.com/LineageOS/android_device_samsung_beyond1lte/tree/lineage-19.1)
+	+ In AndroidProducts.mk, you can see all has been changed into lineage_device.mk, so do the same for our device.
+	+ lineage.dependencies, just rename the file and don't touch anything in it.
+	+ lineage_beyond1lte.mk: you will need to change (necessary) PRODUCT_NAME into our 9810 devices (Example: PRODUCT_NAME := lineage_crownlte) and this line: $(call inherit-product, vendor/lineage/config/common_full_phone.mk)
+ - Now return to your rom repo, resync.
 
-		Hint for Device Tree
-			Example: link= userabc/repositories/device_samsung/crownlte (location on github)
-			 	 path= device/samsung/crownlte (Where it should download to)
-			 	 remote= github (where files are stored)
-			 	 revision= branchname (which version you want)
-    Then repo sync again:
-      /// repo sync  -f --force-sync --no-clone-bundle --no-tags -j$(nproc --all)
-      
-  3. Build
-    - Follow your ROM's manifest to take their building commands, and build!
-Have FUN!
+3. Build
++ Just . build/envsetup.sh in your repo and lunch romname_device.mk-userdebug and use the build command following ROM's specific and all should be done!
       
       
