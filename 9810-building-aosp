@@ -57,7 +57,7 @@ To build AOSP on 9810 devices, you must prepare:
 	+ Now you can look into any official Lineage(or the ROM you want to build) device: at here we use beyond1lte as an example. (https://github.com/LineageOS/android_device_samsung_beyond1lte/tree/lineage-19.1)
 	+ In AndroidProducts.mk, you can see all has been changed into lineage_device.mk, so do the same for our device.
 	+ lineage.dependencies, just rename the file and don't touch anything in it.
-	+ lineage_beyond1lte.mk: you will need to change (necessary) PRODUCT_NAME into our 9810 devices (Example: PRODUCT_NAME := lineage_crownlte) and this line: $(call inherit-product, vendor/lineage/config/common_full_phone.mk)
+	+ lineage_beyond1lte.mk: you will need to change (necessary) PRODUCT_NAME into our 9810 devices (Example: PRODUCT_NAME := lineage_crownlte) and also the name of the file into lineage_crownlte and this line: $(call inherit-product, vendor/lineage/config/common_full_phone.mk)
  - Now return to your rom repo, resync.
 
 3. Build
